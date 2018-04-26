@@ -23,19 +23,14 @@ public class BPlus {
 	private Object root;
 	//T- holds the T value of the tree. needed to ensure the leaf's size is legal
 	private final int T;
-	private storeNodes sn;
-	//minGap- holds the minimal gap between any 2 elements in this tree at any given time
-	private int minGap;
-	
+	private storeNodes sn;	
 	
 	/*Behavior*/
-	/*Constructors*/
-	//creates a new empty tree. 'n' is the number of keys to be entered into the tree- for the bloomfilter 
+	/*Constructors*/ 
 	public BPlus(int t, int n){
 		this.root= null;
 		this.T=t;
 		this.sn= new storeNodes(n);
-		this.minGap= Integer.MAX_VALUE;	//sets the minGap to maximum value
 	}//BPlus(int, int)
 	
 	
@@ -49,7 +44,7 @@ public class BPlus {
 		}
 		else {	//if this isen't the first key
 			if (this.root instanceof Leaf){	//if the root is a leaf, adds it to that leaf
-				gap= ((Leaf)this.root).insert(new Link(x));
+				gap = ((Leaf)this.root).insert(new Link(x));
 				if (((Leaf)this.root).overflow()){	//root is a Leaf, and also needs splitting. only happens once for each BPlus tree
 					splitRoot();
 				}
@@ -68,7 +63,7 @@ public class BPlus {
 				}
 				else {	//the sons of the root are junctions
 					Leaf temp= searchHelper(x, insertionPlace, true);	//finds where x should be inserted
-					gap= temp.insert(new Link(x));	//inserts the new key
+					temp.insert(new Link(x));	//inserts the new key
 					if (temp.overflow())	//if case the leaf is too big, splits it
 						(temp.getParent()).splitSon(temp);
 					Junction tempJunction= temp.getParent();
@@ -87,8 +82,6 @@ public class BPlus {
 				}
 			}
 		}
-		if (gap < this.minGap)
-			this.minGap= gap;
 	}//insert(int)
 	
 	
@@ -135,7 +128,7 @@ public class BPlus {
 	
 	//finds 'x' whithin this tree. returns 'null' if x is not in this tree
 	public Link search(int x){
-		if (this.sn.find(x)){	//first checks the bloomfilter for faster searching
+		if (this.sn.find(x)){	
 			Leaf node= searchHelper(x, this.root, false);	//looks for the leaf where 'x' should be located
 			Link temp=((Leaf)node).find(x);	//looks for 'x' in that leaf
 			if (temp.getElement() == x)	//if the link found is x, returns its location
@@ -152,14 +145,7 @@ public class BPlus {
 		}
 		return (Leaf)node;
 	}//searchHelper(int, Object, boolean)
-	
-	
-	//retunrs the minimal gap between any 2 elements in this tree
-	public int minGap(){
-		return this.minGap;
-	}//minGap()
-	
-	
+		
 	//finds the order of 'x' in this tree. assumes 'x' is present in this tree
 	public int order(int x){		
 		Object node= this.root;
@@ -244,7 +230,6 @@ public class BPlus {
 			bPTree.insert(intToken);
 		}
 		String outputData= bPTree.printTree();	//creates the output data
-		outputData= outputData + "\n" + bPTree.minGap();
 		outputData= outputData + "\n" + bPTree.order(toOrder);
 		writeToFile(outputFileName, outputData);
 	}//main
@@ -303,7 +288,7 @@ public class BPlus {
 	}//writeToFile(String, String)
 
 	
-	//finds how many keys are in the input file, for a better build of the bloomfilter
+	//finds how many keys are in the input file
 	private static int findNumOfElements(String inputData){
 		int sum= 0;
 		StringTokenizer tokens= new StringTokenizer(inputData, " ");
