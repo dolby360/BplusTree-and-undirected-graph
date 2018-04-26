@@ -197,7 +197,7 @@ public class Junction {
 		if (isInserting)	//for insertion uses of this method
 			this.numOfElements++;
 		for (int i=0; i < this.elements.size(); i++){	//scans the junction for the leaf's location
-			if (this.elements.elementAt(i).getElement().x + this.elements.elementAt(i).getElement().y >= x)
+			if (this.elements.elementAt(i).getElement() >= x)
 				return this.pointers.elementAt(i);
 		}
 		return this.pointers.lastElement();	//if not found, returns the last elements

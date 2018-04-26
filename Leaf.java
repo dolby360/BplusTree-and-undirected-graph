@@ -1,10 +1,3 @@
-/*Name: Leaf
-propose: This class represents a leaf of the tree.
-author: Gal Luvton and Daniel Sinaniev
-Date Created: 19/5/2013
-Last modification: 24/5/2013
-*/
-
 import java.util.Vector;
 
 public class Leaf {
@@ -74,7 +67,7 @@ public class Leaf {
 		boolean stop= false;
 		int i;	//will point to the location of the new key in this leaf
 		for(i=0; ((i < this.data.size()) && !stop); i++){	//finds where to place the new key
-			if ((this.data.elementAt(i)).getElement().x + (this.data.elementAt(i)).getElement().y > key.getElement().x + key.getElement().y)
+			if ((this.data.elementAt(i)).getElement() > key.getElement())
 				stop= true;	
 		}
 		if (stop)	//due to the way 'for' loops works, this is needed
@@ -85,6 +78,9 @@ public class Leaf {
 			this.data.elementAt(i-1).setNext(key);
 			this.data.elementAt(i).setPrev(key);
 			this.data.add(i, key);
+			int gap1= this.data.elementAt(i+1).getElement() - this.data.elementAt(i).getElement();	//mesures the gaps
+			int gap2= this.data.elementAt(i).getElement() - this.data.elementAt(i-1).getElement();
+			ans= Math.min(gap1, gap2);
 		}
 		else if((i == 0) && (i != this.data.size())){	//if the new link should be the first in this leaf
 			key.setNext(this.data.elementAt(i));
@@ -93,6 +89,13 @@ public class Leaf {
 				this.data.elementAt(i).getPrev().setNext(key);
 			this.data.elementAt(i).setPrev(key);
 			this.data.add(i, key);
+			int gap1= this.data.elementAt(i+1).getElement() - this.data.elementAt(i).getElement();
+			int gap2;
+			if (this.data.elementAt(i).getPrev() != null)
+				gap2= this.data.elementAt(i).getElement() - (this.data.elementAt(i).getPrev()).getElement();
+			else
+				gap2= Integer.MAX_VALUE;
+			ans= Math.min(gap1, gap2);
 		}
 		else if((i != 0) && (i == this.data.size())){	//if the new link should be last in this leaf
 			key.setNext(this.data.elementAt(i-1).getNext());
@@ -102,6 +105,12 @@ public class Leaf {
 				(key.getNext()).setPrev(key);
 			this.data.add(key);
 			int gap1;
+			if ((this.data.elementAt(i).getNext()) != null)
+				gap1= (this.data.elementAt(i).getNext()).getElement() - this.data.elementAt(i).getElement();
+			else
+				gap1= Integer.MAX_VALUE;
+			int gap2= this.data.elementAt(i).getElement() - this.data.elementAt(i-1).getElement();
+			ans= Math.min(gap1, gap2);
 		}	
 		this.size= this.data.size();	//updates the leaf's size
 		return ans;
@@ -132,7 +141,7 @@ public class Leaf {
 	//finds the location of x in this leaf- if not found, returns 'null'
 	public Link find(int x){
 		for (int i=0; i < this.data.size(); i++){	//searches the leaf
-			if (x <= this.data.elementAt(i).getElement().x + this.data.elementAt(i).getElement().y){
+			if (x <= this.data.elementAt(i).getElement()){
 				return this.data.elementAt(i);
 			}
 		}

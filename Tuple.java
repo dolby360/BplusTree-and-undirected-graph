@@ -6,6 +6,6 @@ public class Tuple{
     this.y = y; 
   } 
   public String toString() { 
-    return this.x + "" + this.y;
+    return "(" + this.x + "," + this.y + ")" + " ";
   } 
 } 

@@ -23,7 +23,10 @@ public class BPlus {
 	private Object root;
 	//T- holds the T value of the tree. needed to ensure the leaf's size is legal
 	private final int T;
-	private storeNodes sn;	
+	private storeNodes sn;
+	//minGap- holds the minimal gap between any 2 elements in this tree at any given time
+	private int minGap;
+	
 	
 	/*Behavior*/
 	/*Constructors*/
@@ -32,29 +35,30 @@ public class BPlus {
 		this.root= null;
 		this.T=t;
 		this.sn= new storeNodes(n);
+		this.minGap= Integer.MAX_VALUE;	//sets the minGap to maximum value
 	}//BPlus(int, int)
 	
 	
-	//insets the key 'x' into thes tree
-	public void insert(Tuple key){
+	//insets the key 'x' into the tree
+	public void insert(int x){
 		int gap= Integer.MAX_VALUE;
-		this.sn.insert(key);
+		this.sn.insert(x);
 		if (this.root == null){	//if this the first key, makes a leaf out of it
-			Link newLink= new Link(key);
+			Link newLink= new Link(x);
 			this.root= new Leaf(newLink, this.T, null, null,  null);
 		}
 		else {	//if this isen't the first key
 			if (this.root instanceof Leaf){	//if the root is a leaf, adds it to that leaf
-				gap= ((Leaf)this.root).insert(new Link(key));
+				gap= ((Leaf)this.root).insert(new Link(x));
 				if (((Leaf)this.root).overflow()){	//root is a Leaf, and also needs splitting. only happens once for each BPlus tree
 					splitRoot();
 				}
 			}
 			else {	//if root is a junction
-				Object insertionPlace= ((Junction)this.root).find(key.x + key.y, true);	//finds where x should be inserted
+				Object insertionPlace= ((Junction)this.root).find(x, true);	//finds where x should be inserted
 				if (insertionPlace instanceof Leaf){	//the sons of the root are leafs
 					Leaf insertPlace= (Leaf)insertionPlace;
-					gap= insertPlace.insert(new Link(key));	//inserts the new key
+					gap= insertPlace.insert(new Link(x));	//inserts the new key
 					if (insertPlace.overflow()){	//if case the leaf is too big, splits it
 						((Junction)this.root).splitSon(insertionPlace);
 					}
@@ -63,8 +67,8 @@ public class BPlus {
 					}
 				}
 				else {	//the sons of the root are junctions
-					Leaf temp= searchHelper(key.x + key.y, insertionPlace, true);	//finds where x should be inserted
-					gap= temp.insert(new Link(key));	//inserts the new key
+					Leaf temp= searchHelper(x, insertionPlace, true);	//finds where x should be inserted
+					gap= temp.insert(new Link(x));	//inserts the new key
 					if (temp.overflow())	//if case the leaf is too big, splits it
 						(temp.getParent()).splitSon(temp);
 					Junction tempJunction= temp.getParent();
@@ -83,6 +87,8 @@ public class BPlus {
 				}
 			}
 		}
+		if (gap < this.minGap)
+			this.minGap= gap;
 	}//insert(int)
 	
 	
@@ -127,15 +133,15 @@ public class BPlus {
 	}//splitRoot
 	
 	
-	//finds 'key' within this tree. returns 'null' if key is not in this tree
-	public Link search(int key){
-		if (this.sn.find(key)){
-			Leaf node= searchHelper(key, this.root, false);	//looks for the leaf where 'key' should be located
-			Link temp=((Leaf)node).find(key);	//looks for 'key' in that leaf
-			if (temp.getElement().x +  temp.getElement().y == key)	//if the link found is key, returns its location
+	//finds 'x' whithin this tree. returns 'null' if x is not in this tree
+	public Link search(int x){
+		if (this.sn.find(x)){	//first checks the bloomfilter for faster searching
+			Leaf node= searchHelper(x, this.root, false);	//looks for the leaf where 'x' should be located
+			Link temp=((Leaf)node).find(x);	//looks for 'x' in that leaf
+			if (temp.getElement() == x)	//if the link found is x, returns its location
 				return temp;
 		}
-		return null;	//if key is not found, returns 'null'
+		return null;	//if x is not found, returns 'null'
 	}//search(int)
 	
 	
@@ -146,7 +152,14 @@ public class BPlus {
 		}
 		return (Leaf)node;
 	}//searchHelper(int, Object, boolean)
-		
+	
+	
+	//retunrs the minimal gap between any 2 elements in this tree
+	public int minGap(){
+		return this.minGap;
+	}//minGap()
+	
+	
 	//finds the order of 'x' in this tree. assumes 'x' is present in this tree
 	public int order(int x){		
 		Object node= this.root;
@@ -157,7 +170,7 @@ public class BPlus {
 			Vector<Object> pointers= junctionNode.getPointers();
 			int i;	//i will hold the location of the key
 			for (i= 0; ((i != -1) && (i < elements.size())); i++){	//sums the keys we skipped over
-				if (x > elements.elementAt(i).getElement().x + elements.elementAt(i).getElement().y){
+				if (x > elements.elementAt(i).getElement()){
 					if (pointers.elementAt(i) instanceof Leaf)
 						ans+= ((Leaf)pointers.elementAt(i)).getSize();
 					else
@@ -175,7 +188,7 @@ public class BPlus {
 		Leaf leafNode= (Leaf)node;	//this is the leaf where the key is located
 		Vector<Link> data= leafNode.getData();
 		for (int i=0; i < leafNode.getSize(); i++){	//adds the number of keys that are before 'x' in his leaf
-			if (x >= data.elementAt(i).getElement().x + data.elementAt(i).getElement().y){
+			if (x >= data.elementAt(i).getElement()){
 				ans++;
 			}
 			else
@@ -211,7 +224,6 @@ public class BPlus {
 	 * @args[3] - output file name	
 	 */ 
 	public static void main(String[] args) {
-
 		String inputFileName= args[0];	//stores all the given arguments
 		int T= Integer.decode(args[1]);
 		int toOrder= Integer.decode(args[2]);
@@ -229,10 +241,10 @@ public class BPlus {
 			catch (Exception e){
 				intToken= Integer.decode(token.substring(0, token.length()-1));
 			}
-			Tuple tup = new Tuple(intToken,intToken);
-			bPTree.insert(tup);
+			bPTree.insert(intToken);
 		}
 		String outputData= bPTree.printTree();	//creates the output data
+		outputData= outputData + "\n" + bPTree.minGap();
 		outputData= outputData + "\n" + bPTree.order(toOrder);
 		writeToFile(outputFileName, outputData);
 	}//main
@@ -291,7 +303,7 @@ public class BPlus {
 	}//writeToFile(String, String)
 
 	
-	//finds how many keys are in the input file
+	//finds how many keys are in the input file, for a better build of the bloomfilter
 	private static int findNumOfElements(String inputData){
 		int sum= 0;
 		StringTokenizer tokens= new StringTokenizer(inputData, " ");

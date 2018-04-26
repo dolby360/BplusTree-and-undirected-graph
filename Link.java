@@ -1,6 +1,15 @@
+/*Name: Link
+propose: This class represents a number stored whithin the tree.
+author: Gal Luvton and Daniel Sinaniev
+Date Created: 19/5/2013
+Last modification: 24/5/2013
+*/
+
 public class Link {
-	
-	private Tuple element;
+
+	/*Fields*/
+	//element- holds the numaric value of this given link
+	private int element;
 	//prev- points to the previous link in the list of numbers (spans over all the leafs in the tree)
 	private Link prev;
 	//next- points to the next link in the list (spans over all the leafs in the tree)
@@ -10,7 +19,7 @@ public class Link {
 	/*Behavior*/
 	/*Constructors*/
 	//this constructor sets the given values into the fields
-	public Link(Tuple element){
+	public Link(int element){
 		this.element= element;
 		this.prev= null;
 		this.next= null;
@@ -18,7 +27,7 @@ public class Link {
 	
 	
 	//data getter
-	protected Tuple getElement() {
+	protected int getElement() {
 		return this.element;
 	}//getData()
 	

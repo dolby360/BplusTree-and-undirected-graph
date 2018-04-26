@@ -5,8 +5,8 @@ public class storeNodes {
 	public storeNodes(int n){
 		arr = new ArrayList<Integer>();
 	}
-	public void insert(Tuple t){
-		arr.add(t.x + t.y);
+	public void insert(int t){
+		arr.add(t);
 	}
 	public boolean find(int x){
 		return arr.contains(x);
