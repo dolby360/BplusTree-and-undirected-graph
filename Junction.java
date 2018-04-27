@@ -185,7 +185,7 @@ public class Junction {
 	
 	//removes the last element of this junction
 	protected void removeLastElement(){
-		if (this.pointers.size() == this.elements.size()){	//will not allow a gap to form
+		if (this.pointers.size() == this.elements.size()){	
 			this.elements.remove(this.elements.size()-1);
 		}
 		this.size= this.elements.size();	//updates the size of this junction

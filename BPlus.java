@@ -36,7 +36,6 @@ public class BPlus {
 	
 	//insets the key 'x' into the tree
 	public void insert(double x){
-		double gap = (double)Integer.MAX_VALUE;
 		this.sn.insert(x);
 		if (this.root == null){	//if this the first key, makes a leaf out of it
 			Link newLink= new Link(x);
@@ -44,7 +43,7 @@ public class BPlus {
 		}
 		else {	//if this isen't the first key
 			if (this.root instanceof Leaf){	//if the root is a leaf, adds it to that leaf
-				gap = ((Leaf)this.root).insert(new Link(x));
+				((Leaf)this.root).insert(new Link(x));
 				if (((Leaf)this.root).overflow()){	//root is a Leaf, and also needs splitting. only happens once for each BPlus tree
 					splitRoot();
 				}
@@ -52,8 +51,8 @@ public class BPlus {
 			else {	//if root is a junction
 				Object insertionPlace= ((Junction)this.root).find(x, true);	//finds where x should be inserted
 				if (insertionPlace instanceof Leaf){	//the sons of the root are leafs
-					Leaf insertPlace= (Leaf)insertionPlace;
-					gap= insertPlace.insert(new Link(x));	//inserts the new key
+					Leaf insertPlace= (Leaf)insertionPlace;//inserts the new key
+					insertPlace.insert(new Link(x));
 					if (insertPlace.overflow()){	//if case the leaf is too big, splits it
 						((Junction)this.root).splitSon(insertionPlace);
 					}
@@ -82,7 +81,7 @@ public class BPlus {
 				}
 			}
 		}
-	}//insert(int)
+	}
 	
 	
 	//splits the roon into 2 junctions/leafs and makes a new root
@@ -220,15 +219,14 @@ public class BPlus {
 		StringTokenizer tokens= new StringTokenizer(inputData, " ");
 		while (tokens.hasMoreTokens()){	//runs the inserting of the tree
 			String token= tokens.nextToken();
-			double intToken;
+			double myToken = -1;
 			try {	//since the input files end in "\n", we must work around that
-				intToken= Double.parseDouble(token);
+				myToken = Double.parseDouble(token);
 			}
-			catch (Exception e){
-				intToken= Double.parseDouble(token.substring(0, token.length()-1));
-				System.out.println(intToken);
+			catch (Exception e){}
+			if(myToken != -1){
+				bPTree.insert(myToken);
 			}
-			bPTree.insert(intToken);
 		}
 		String outputData= bPTree.printTree();	//creates the output data
 		outputData= outputData +  "\n" + "Node number: " + someNode + " Have " + bPTree.order(someNode) + " children's";
