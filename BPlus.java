@@ -185,21 +185,20 @@ public class BPlus {
 		
 		return counter;
 	}
-	
+	private String MyTree;
 	private void printAllTree(Object node){
 		if(!(node instanceof Leaf)){
-			System.out.println("My level is: " +   myHight(node)  );
+			MyTree += "My level is: " +   myHight(node) + "\n";
 	        Iterator<Link> itr = ((Junction)node).getElements().iterator();
 	        while(itr.hasNext()){
-	            System.out.println(itr.next());
+	        	MyTree += itr.next() + " ";
 	        }
-	        System.out.println("");
+	        MyTree += "\n";
 	        for(int i = 0;i < (((Junction)node).getPointers().size());i++){
 	        	printAllTree(((Junction)node).getPointers().elementAt(i));
 	        }
 		}else{
-			System.out.println("My level is: " + 0);
-			System.out.println(node);
+			MyTree += "My level is: " + 0 + "\n" + node + "\n";
 			return;
 		}
 	}
@@ -208,7 +207,11 @@ public class BPlus {
 	private String printTree(){
 		String ans= "";
 		Object node= this.root;
+		
+		MyTree = new String();
 		printAllTree(this.root);
+		writeToFile("MyTree.dat",MyTree);
+
 		while (!(node instanceof Leaf))
 			node= (((Junction)node).getPointers()).elementAt(0);
 		Leaf leafNode= (Leaf)node;
@@ -218,9 +221,6 @@ public class BPlus {
 		}
 		return ans.substring(0, ans.length()-1);
 	}//printTree()
-
-	
-	
 	
 	/**
 	 * this method runs the tree's building
