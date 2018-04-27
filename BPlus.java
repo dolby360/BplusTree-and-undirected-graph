@@ -179,7 +179,7 @@ public class BPlus {
 			node= (((Junction)node).getPointers()).elementAt(0);
 		Leaf leafNode= (Leaf)node;
 		while (leafNode != null){
-			ans= ans + (leafNode.toString()).substring(0, (leafNode.toString()).length()) + "#";
+			ans= ans + (leafNode.toString()).substring(0, (leafNode.toString()).length()) + " # ";
 			leafNode= leafNode.getNext();
 		}
 		return ans.substring(0, ans.length()-1);
@@ -198,7 +198,7 @@ public class BPlus {
 	public static void mainBPT(String[] args) {
 		String inputFileName= args[0];	//stores all the given arguments
 		int T = Integer.decode(args[1]);
-		String outputFileName= args[2];
+		String outputFileName = "Leafs.dat";
 		String inputData= readFromFile(inputFileName);
 		int numOfElements= findNumOfElements(inputData);
 		bPTree = new BPlus(T, numOfElements);
