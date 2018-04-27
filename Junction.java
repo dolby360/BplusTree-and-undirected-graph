@@ -1,9 +1,3 @@
-/*Name: Junction
-propose: This class represents a junction of the tree.
-author: Gal Luvton and Daniel Sinaniev
-Date Created: 19/5/2013
-Last modification: 24/5/2013
-*/
 import java.util.Vector;
 
 
