@@ -62,8 +62,8 @@ public class Leaf {
 	
 	
 	//inserts a new key into the leaf. returns the minimal gap between this link and the adjacent ones
-	protected int insert(Link key){
-		int ans= Integer.MAX_VALUE;	//sets the value to a high number to ensure the corrent gap will register
+	protected double insert(Link key){
+		double ans= Integer.MAX_VALUE;	//sets the value to a high number to ensure the corrent gap will register
 		boolean stop= false;
 		int i;	//will point to the location of the new key in this leaf
 		for(i=0; ((i < this.data.size()) && !stop); i++){	//finds where to place the new key
@@ -78,9 +78,9 @@ public class Leaf {
 			this.data.elementAt(i-1).setNext(key);
 			this.data.elementAt(i).setPrev(key);
 			this.data.add(i, key);
-			int gap1= this.data.elementAt(i+1).getElement() - this.data.elementAt(i).getElement();	//mesures the gaps
-			int gap2= this.data.elementAt(i).getElement() - this.data.elementAt(i-1).getElement();
-			ans= Math.min(gap1, gap2);
+			double gap1= this.data.elementAt(i+1).getElement() - this.data.elementAt(i).getElement();	//mesures the gaps
+			double gap2= this.data.elementAt(i).getElement() - this.data.elementAt(i-1).getElement();
+			ans = Math.min(gap1, gap2);
 		}
 		else if((i == 0) && (i != this.data.size())){	//if the new link should be the first in this leaf
 			key.setNext(this.data.elementAt(i));
@@ -89,10 +89,10 @@ public class Leaf {
 				this.data.elementAt(i).getPrev().setNext(key);
 			this.data.elementAt(i).setPrev(key);
 			this.data.add(i, key);
-			int gap1= this.data.elementAt(i+1).getElement() - this.data.elementAt(i).getElement();
-			int gap2;
+			double gap1= this.data.elementAt(i+1).getElement() - this.data.elementAt(i).getElement();
+			double gap2;
 			if (this.data.elementAt(i).getPrev() != null)
-				gap2= this.data.elementAt(i).getElement() - (this.data.elementAt(i).getPrev()).getElement();
+				gap2 = this.data.elementAt(i).getElement() - (this.data.elementAt(i).getPrev()).getElement();
 			else
 				gap2= Integer.MAX_VALUE;
 			ans= Math.min(gap1, gap2);
@@ -104,12 +104,12 @@ public class Leaf {
 			if (key.getNext() != null)
 				(key.getNext()).setPrev(key);
 			this.data.add(key);
-			int gap1;
+			double gap1;
 			if ((this.data.elementAt(i).getNext()) != null)
 				gap1= (this.data.elementAt(i).getNext()).getElement() - this.data.elementAt(i).getElement();
 			else
 				gap1= Integer.MAX_VALUE;
-			int gap2= this.data.elementAt(i).getElement() - this.data.elementAt(i-1).getElement();
+			double gap2= this.data.elementAt(i).getElement() - this.data.elementAt(i-1).getElement();
 			ans= Math.min(gap1, gap2);
 		}	
 		this.size= this.data.size();	//updates the leaf's size

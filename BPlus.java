@@ -35,8 +35,8 @@ public class BPlus {
 	
 	
 	//insets the key 'x' into the tree
-	public void insert(int x){
-		int gap= Integer.MAX_VALUE;
+	public void insert(double x){
+		double gap = (double)Integer.MAX_VALUE;
 		this.sn.insert(x);
 		if (this.root == null){	//if this the first key, makes a leaf out of it
 			Link newLink= new Link(x);
@@ -139,7 +139,7 @@ public class BPlus {
 	
 	
 	//this method is used to lower the load off 'search', and also so it can be called recursively
-	private Leaf searchHelper(int x, Object node, boolean isInserting){
+	private Leaf searchHelper(double x, Object node, boolean isInserting){
 		while (!(node instanceof Leaf)){	//while we have not found a leaf, keeps going deeper into the tree
 			node= ((Junction)node).find(x, isInserting);
 		}
@@ -180,7 +180,7 @@ public class BPlus {
 			else
 				i= leafNode.getSize();
 		}
-		return ans;
+		return ans - 1;
 	}//order(int)
 	
 	
@@ -211,8 +211,8 @@ public class BPlus {
 	 */ 
 	public static void main(String[] args) {
 		String inputFileName= args[0];	//stores all the given arguments
-		int T= Integer.decode(args[1]);
-		int toOrder= Integer.decode(args[2]);
+		int T = Integer.decode(args[1]);
+		int someNode = Integer.decode(args[2]);
 		String outputFileName= args[3];
 		String inputData= readFromFile(inputFileName);
 		int numOfElements= findNumOfElements(inputData);
@@ -220,17 +220,18 @@ public class BPlus {
 		StringTokenizer tokens= new StringTokenizer(inputData, " ");
 		while (tokens.hasMoreTokens()){	//runs the inserting of the tree
 			String token= tokens.nextToken();
-			int intToken;
+			double intToken;
 			try {	//since the input files end in "\n", we must work around that
-				intToken= Integer.decode(token);
+				intToken= Double.parseDouble(token);
 			}
 			catch (Exception e){
-				intToken= Integer.decode(token.substring(0, token.length()-1));
+				intToken= Double.parseDouble(token.substring(0, token.length()-1));
+				System.out.println(intToken);
 			}
 			bPTree.insert(intToken);
 		}
 		String outputData= bPTree.printTree();	//creates the output data
-		outputData= outputData + "\n" + bPTree.order(toOrder);
+		outputData= outputData +  "\n" + "Node number: " + someNode + " Have " + bPTree.order(someNode) + " children's";
 		writeToFile(outputFileName, outputData);
 	}//main
 	

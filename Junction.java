@@ -193,7 +193,7 @@ public class Junction {
 	
 	
 	//finds x in this junction. if used while inserting, increases the size of this junction's numOfElemets
-	protected Object find(int x, boolean isInserting){
+	protected Object find(double x, boolean isInserting){
 		if (isInserting)	//for insertion uses of this method
 			this.numOfElements++;
 		for (int i=0; i < this.elements.size(); i++){	//scans the junction for the leaf's location
