@@ -93,12 +93,6 @@ public class Leaf {
 			if (key.getNext() != null)
 				(key.getNext()).setPrev(key);
 			this.data.add(key);
-			double gap1;
-			if ((this.data.elementAt(i).getNext()) != null)
-				gap1= (this.data.elementAt(i).getNext()).getElement() - this.data.elementAt(i).getElement();
-			else
-				gap1= Integer.MAX_VALUE;
-			double gap2= this.data.elementAt(i).getElement() - this.data.elementAt(i-1).getElement();
 		}	
 		this.size= this.data.size();	//updates the leaf's size
 	}
@@ -126,7 +120,7 @@ public class Leaf {
 	
 	
 	//finds the location of x in this leaf- if not found, returns 'null'
-	public Link find(int x){
+	public Link find(double x){
 		for (int i=0; i < this.data.size(); i++){	//searches the leaf
 			if (x <= this.data.elementAt(i).getElement()){
 				return this.data.elementAt(i);

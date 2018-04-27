@@ -120,7 +120,7 @@ public class BPlus {
 	
 	
 	//finds 'x' whithin this tree. returns 'null' if x is not in this tree
-	public Link search(int x){
+	public Link search(double x){
 		if (this.sn.find(x)){	
 			Leaf node= searchHelper(x, this.root, false);	//looks for the leaf where 'x' should be located
 			Link temp=((Leaf)node).find(x);	//looks for 'x' in that leaf
@@ -138,44 +138,7 @@ public class BPlus {
 		}
 		return (Leaf)node;
 	}//searchHelper(int, Object, boolean)
-		
-	//finds the order of 'x' in this tree. assumes 'x' is present in this tree
-	public int order(double x){		
-		Object node= this.root;
-		int ans= 0;
-		while (!(node instanceof Leaf)){	//while we haven't found the key's leaf
-			Junction junctionNode= (Junction)node;
-			Vector<Link> elements= junctionNode.getElements();
-			Vector<Object> pointers= junctionNode.getPointers();
-			int i;	//i will hold the location of the key
-			for (i= 0; ((i != -1) && (i < elements.size())); i++){	//sums the keys we skipped over
-				if (x > elements.elementAt(i).getElement()){
-					if (pointers.elementAt(i) instanceof Leaf)
-						ans+= ((Leaf)pointers.elementAt(i)).getSize();
-					else
-						ans+= ((Junction)pointers.elementAt(i)).numOfElements();
-				}
-				else {
-					node= pointers.elementAt(i);
-					i= -2;
-				}
-			}
-			if (i != -1){
-				node= pointers.lastElement();
-			}
-		}
-		Leaf leafNode= (Leaf)node;	//this is the leaf where the key is located
-		Vector<Link> data= leafNode.getData();
-		for (int i=0; i < leafNode.getSize(); i++){	//adds the number of keys that are before 'x' in his leaf
-			if (x >= data.elementAt(i).getElement()){
-				ans++;
-			}
-			else
-				i= leafNode.getSize();
-		}
-		return ans - 1;
-	}//order(int)
-	
+			
 	private int myHight(Object node){
 		int counter = 0;
 		while(!(node instanceof Leaf)){
@@ -222,6 +185,8 @@ public class BPlus {
 		return ans.substring(0, ans.length()-1);
 	}//printTree()
 	
+	
+	public static BPlus bPTree;
 	/**
 	 * this method runs the tree's building
 	 * @param args - array of input arguments
@@ -230,14 +195,13 @@ public class BPlus {
 	 * @args[2] - the key who's order we will find
 	 * @args[3] - output file name	
 	 */ 
-	public static void main(String[] args) {
+	public static void mainBPT(String[] args) {
 		String inputFileName= args[0];	//stores all the given arguments
 		int T = Integer.decode(args[1]);
-		int someNode = Integer.decode(args[2]);
-		String outputFileName= args[3];
+		String outputFileName= args[2];
 		String inputData= readFromFile(inputFileName);
 		int numOfElements= findNumOfElements(inputData);
-		BPlus bPTree= new BPlus(T, numOfElements);
+		bPTree = new BPlus(T, numOfElements);
 		StringTokenizer tokens= new StringTokenizer(inputData, " ");
 		while (tokens.hasMoreTokens()){	//runs the inserting of the tree
 			String token= tokens.nextToken();
@@ -251,7 +215,6 @@ public class BPlus {
 			}
 		}
 		String outputData= bPTree.printTree();	//creates the output data
-		outputData= outputData +  "\n" + "Node number: " + someNode + " Have " + bPTree.order(someNode) + " children's";
 		writeToFile(outputFileName, outputData);
 	}//main
 	
