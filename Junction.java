@@ -16,7 +16,7 @@ public class Junction {
 	private final int T;
 	//parent- points to the father of this junction
 	private Junction parent;
-	//elements- holds the links this junction points to (as stated in the assigment)
+	//elements- holds the links this junction points to
 	private Vector<Link> elements;
 	//pointers- points to the sons of this junction
 	private Vector<Object> pointers;

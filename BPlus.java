@@ -1,9 +1,3 @@
-/*Name: BPlus
-propose: This class represents a B+ tree. Also holds the "Main" method
-author: Gal Luvton and Daniel Sinaniev
-Date Created: 19/5/2013
-Last modification: 24/5/2013
-*/
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -14,12 +8,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 import java.util.Vector;
-
+import java.util.Iterator;
 
 public class BPlus {
 	
 	/*Fields*/
-	//root- points to the root of this tree
+	//root - points to the root of this tree
 	private Object root;
 	//T- holds the T value of the tree. needed to ensure the leaf's size is legal
 	private final int T;
@@ -39,7 +33,7 @@ public class BPlus {
 		this.sn.insert(x);
 		if (this.root == null){	//if this the first key, makes a leaf out of it
 			Link newLink= new Link(x);
-			this.root= new Leaf(newLink, this.T, null, null,  null);
+			this.root = new Leaf(newLink, this.T, null, null,  null);
 		}
 		else {	//if this isen't the first key
 			if (this.root instanceof Leaf){	//if the root is a leaf, adds it to that leaf
@@ -146,10 +140,10 @@ public class BPlus {
 	}//searchHelper(int, Object, boolean)
 		
 	//finds the order of 'x' in this tree. assumes 'x' is present in this tree
-	public int order(int x){		
+	public int order(double x){		
 		Object node= this.root;
 		int ans= 0;
-		while (!(node instanceof Leaf)){	//while we havent found the key's leaf
+		while (!(node instanceof Leaf)){	//while we haven't found the key's leaf
 			Junction junctionNode= (Junction)node;
 			Vector<Link> elements= junctionNode.getElements();
 			Vector<Object> pointers= junctionNode.getPointers();
@@ -182,11 +176,39 @@ public class BPlus {
 		return ans - 1;
 	}//order(int)
 	
+	private int myHight(Object node){
+		int counter = 0;
+		while(!(node instanceof Leaf)){
+			node = (((Junction)node).getPointers().elementAt(0));
+			counter++;
+		}
+		
+		return counter;
+	}
+	
+	private void printAllTree(Object node){
+		if(!(node instanceof Leaf)){
+			System.out.println("My level is: " +   myHight(node)  );
+	        Iterator<Link> itr = ((Junction)node).getElements().iterator();
+	        while(itr.hasNext()){
+	            System.out.println(itr.next());
+	        }
+	        System.out.println("");
+	        for(int i = 0;i < (((Junction)node).getPointers().size());i++){
+	        	printAllTree(((Junction)node).getPointers().elementAt(i));
+	        }
+		}else{
+			System.out.println("My level is: " + 0);
+			System.out.println(node);
+			return;
+		}
+	}
 	
 	//prints the tree
 	private String printTree(){
 		String ans= "";
 		Object node= this.root;
+		printAllTree(this.root);
 		while (!(node instanceof Leaf))
 			node= (((Junction)node).getPointers()).elementAt(0);
 		Leaf leafNode= (Leaf)node;
