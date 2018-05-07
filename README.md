@@ -5,3 +5,5 @@ input file
 degree
 For example:
 input.dat 3
+
+The file shuld be under ~\JavaWorkSpace\B-Plus-Tree-master
