@@ -7,6 +7,12 @@ public class Main {
 		BPlus.mainBPT(args);
 		if(BPlus.bPTree.search(5.1) != null){
 			System.out.println(5.1 + " here");
+			BPlus.bPTree.deleteNode(5.1);
+		}else{
+			System.out.println(5.1 + "not here");
+		}
+		if(BPlus.bPTree.search(5.1) != null){
+			System.out.println(5.1 + " here");
 		}else{
 			System.out.println(5.1 + "not here");
 		}

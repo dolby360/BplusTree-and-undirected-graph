@@ -119,11 +119,29 @@ public class BPlus {
 	}//splitRoot
 	
 	
+	//------------------DELETE-----------------------
+	//finds 'x' whithin this tree and delete it.
+	public void deleteNode(double x){
+		if (this.sn.find(x)){	
+			Leaf node= searchHelper(x, this.root, false);	//looks for the leaf where 'x' should be located
+			Link temp=((Leaf)node).find(x);	//looks for 'x' in that leaf
+			if (temp.getElement() == x){	//if the link found is x, returns its location
+				node.deleteMe();
+			}
+		}
+	}//search(int)
+	
+	//-----------------------------------------
+	
+	
 	//finds 'x' whithin this tree. returns 'null' if x is not in this tree
 	public Link search(double x){
 		if (this.sn.find(x)){	
 			Leaf node= searchHelper(x, this.root, false);	//looks for the leaf where 'x' should be located
 			Link temp=((Leaf)node).find(x);	//looks for 'x' in that leaf
+			if(temp == null){
+				return null;
+			}
 			if (temp.getElement() == x)	//if the link found is x, returns its location
 				return temp;
 		}

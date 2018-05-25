@@ -14,6 +14,7 @@ public class Leaf {
 	//data- holds the numbers stored in this leaf
 	private Vector<Link> data;
 	
+	private boolean I_was_deleted;
 	
 	/*Behavior*/
 	/*Constructors*/
@@ -46,8 +47,12 @@ public class Leaf {
 			key.setNext(null);
 			key.setPrev(null);
 		}
+		I_was_deleted = false;
 	}//Leaf(Link, int, Junction, Leaf, Leaf)
 	
+	public void deleteMe(){
+		I_was_deleted = true;
+	}
 	
 	//returns the last Link in this leaf
 	protected Link getLast(){
@@ -122,6 +127,9 @@ public class Leaf {
 	//finds the location of x in this leaf- if not found, returns 'null'
 	public Link find(double x){
 		for (int i=0; i < this.data.size(); i++){	//searches the leaf
+			if(x <= this.data.elementAt(i).getElement() && I_was_deleted){
+				return null;
+			}
 			if (x <= this.data.elementAt(i).getElement()){
 				return this.data.elementAt(i);
 			}
